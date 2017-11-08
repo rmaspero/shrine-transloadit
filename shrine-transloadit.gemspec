@@ -1,6 +1,6 @@
 Gem::Specification.new do |gem|
-  gem.name          = "shrine-transloadit"
-  gem.version       = "0.4.3"
+  gem.name          = "shrine-transloadit-rm"
+  gem.version       = "0.4.5"
 
   gem.required_ruby_version = ">= 2.1"
 
