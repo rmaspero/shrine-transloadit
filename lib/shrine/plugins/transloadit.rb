@@ -97,6 +97,7 @@ class Shrine
         def transloadit_save(response, valid: true)
           if versions = response["fields"]["versions"]
             stored_file = versions.inject({}) do |hash, (name, key)|
+              byebug
               if response["results"].fetch(key).count > 1
                 response["results"].fetch(key).each do |result|
                   uploaded_file = store.transloadit_uploaded_file(result)
