@@ -97,9 +97,18 @@ class Shrine
         def transloadit_save(response, valid: true)
           if versions = response["fields"]["versions"]
             stored_file = versions.inject({}) do |hash, (name, key)|
-              result = response["results"].fetch(key)[0]
-              uploaded_file = store.transloadit_uploaded_file(result)
-              hash.update(name => uploaded_file)
+              if response["results"].fetch(key).count > 1
+                response["results"].fetch(key).each do |result|
+                  uploaded_file = store.transloadit_uploaded_file(result)
+                  compiled_name = "#{name}_#{result['meta']['relative_path'] or ''}_#{result.fetch('basename') or ''}"
+                  hash.update(compiled_name => uploaded_file)
+                end
+              else
+                result = response["results"].fetch(key)[0]
+                uploaded_file = store.transloadit_uploaded_file(result)
+                hash.update(name => uploaded_file)
+              end
+              hash
             end
           else
             result = response["results"].values.last[0]
@@ -111,6 +120,10 @@ class Shrine
           else
             _delete(stored_file, action: :abort)
           end
+        end
+
+        # Determines if it recives multiple files and then adds versions of each of them
+        def multiple_files()
         end
       end
 
